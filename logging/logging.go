@@ -39,7 +39,7 @@ type logger struct {
 	stats statsd.ClientInterface
 }
 
-// Wrap error with additional info
+// Wrap error with additional info and return error.
 func (s *logger) WrapError(sname string, fname string, detail string, err error) error {
 	return errors.Wrap(err, "["+sname+"."+fname+"] "+detail)
 }
