@@ -1,3 +1,7 @@
+task :command_exists, [:command] do |_, args|
+  abort "#{args.command} doesn't exists" if `command -v #{args.command} > /dev/null 2>&1 && echo $?`.chomp.empty?
+end
+
 task :has_bumpversion do
     Rake::Task['command_exists'].invoke('bumpversion')
 end
