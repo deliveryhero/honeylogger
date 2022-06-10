@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/DataDog/datadog-go/statsd"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
@@ -35,6 +36,10 @@ var ddTraceIDKey = "dd.trace_id"
 type logger struct {
 	*zap.SugaredLogger
 	stats statsd.ClientInterface
+}
+
+func (s *logger) WrapError(sname string, fname string, detail string, err error) error {
+	return errors.Wrap(err, "["+sname+"."+fname+"] "+detail)
 }
 
 // InfoContext Creates info log with context. Appends dd.trace_id if context has a DD span.
