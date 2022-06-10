@@ -28,6 +28,7 @@ type Logger interface {
 	ErrorSpan(msg string, err error, span tracer.Span, keysAndValues ...interface{})
 	FinishSpanWithError(op string, sp tracer.Span, err error, keysAndValues ...interface{})
 	FinishSpan(op string, sp tracer.Span, keysAndValues ...interface{})
+	WrapError(sname string, fname string, detail string, err error) error // Wrap error with additional info
 }
 
 var ddTraceIDKey = "dd.trace_id"
@@ -38,6 +39,7 @@ type logger struct {
 	stats statsd.ClientInterface
 }
 
+// Wrap error with additional info
 func (s *logger) WrapError(sname string, fname string, detail string, err error) error {
 	return errors.Wrap(err, "["+sname+"."+fname+"] "+detail)
 }
