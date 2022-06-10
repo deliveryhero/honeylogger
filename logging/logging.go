@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/DataDog/datadog-go/statsd"
-	"github.com/pkg/errors"
 	"go.uber.org/zap"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
@@ -41,7 +40,7 @@ type logger struct {
 
 // Wrap error with additional info and return error.
 func (s *logger) WrapError(sname string, fname string, detail string, err error) error {
-	return errors.Wrap(err, "["+sname+"."+fname+"] "+detail)
+	return fmt.Errorf("[%s.%s] %s %w", sname, fname, detail, err)
 }
 
 // InfoContext Creates info log with context. Appends dd.trace_id if context has a DD span.
