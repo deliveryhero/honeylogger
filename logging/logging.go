@@ -29,9 +29,7 @@ type Logger interface {
 	FinishSpan(op string, sp tracer.Span, keysAndValues ...interface{})
 }
 
-var (
-	ddTraceIDKey = "dd.trace_id"
-)
+var ddTraceIDKey = "dd.trace_id"
 
 // Logger ...
 type logger struct {
