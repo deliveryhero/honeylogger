@@ -29,7 +29,7 @@ type Logger interface {
 	ErrorSpan(msg string, err error, span tracer.Span, keysAndValues ...interface{})
 	FinishSpanWithError(op string, sp tracer.Span, err error, keysAndValues ...interface{})
 	FinishSpan(op string, sp tracer.Span, keysAndValues ...interface{})
-	WrapError(sname string, fname string, detail string, err error) error
+	DataDogLogPrintf(sname string, fname string, detail string, params ...interface{}) string
 }
 
 var ddTraceIDKey = "dd.trace_id"
@@ -40,12 +40,13 @@ type logger struct {
 	stats statsd.ClientInterface
 }
 
-// Wrap error with additional info and return error.
-func (s *logger) WrapError(sname string, fname string, detail string, err error) error {
-	if err == nil {
-		return nil
-	}
-	return fmt.Errorf("[%s.%s] %s %w", sname, fname, detail, err)
+// DataDogLogPrintf with additional info and return trace.
+// sname is the name of the struct.
+// fname is the name of the function name.
+// detail is the detail of the error.
+// params is the parameters of detail the function.
+func (s *logger) DataDogLogPrintf(sname string, fname string, detail string, params ...interface{}) string {
+	return fmt.Sprintf("[%s.%s] %s", sname, fname, fmt.Sprintf(detail, params...))
 }
 
 // InfoContext Creates info log with context. Appends dd.trace_id if context has a DD span.
