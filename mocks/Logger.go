@@ -77,6 +77,14 @@ func (_m *Logger) FinishSpanWithError(op string, sp ddtrace.Span, err error, key
 	_m.Called(_ca...)
 }
 
+// FinishSpanWithIncrement provides a mock function with given fields: op, sp, keysAndValues
+func (_m *Logger) FinishSpanWithIncrement(op string, sp ddtrace.Span, keysAndValues ...interface{}) {
+	var _ca []interface{}
+	_ca = append(_ca, op, sp)
+	_ca = append(_ca, keysAndValues...)
+	_m.Called(_ca...)
+}
+
 // Info provides a mock function with given fields: keysAndValues
 func (_m *Logger) Info(keysAndValues ...interface{}) {
 	var _ca []interface{}
