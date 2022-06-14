@@ -1,3 +1,7 @@
+/*
+Package logging is a basic wrapper for logging operations with DataDog support.
+Uses Uber's zap logger under the hood.
+*/
 package logging
 
 import (
@@ -34,7 +38,6 @@ type Logger interface {
 
 var ddTraceIDKey = "dd.trace_id"
 
-// Logger ...
 type logger struct {
 	*zap.SugaredLogger
 	stats statsd.ClientInterface
@@ -49,7 +52,7 @@ func (s *logger) DataDogLogPrintf(sname string, fname string, detail string, par
 	return fmt.Sprintf("[%s.%s] %s", sname, fname, fmt.Sprintf(detail, params...))
 }
 
-// InfoContext Creates info log with context. Appends dd.trace_id if context has a DD span.
+// InfoContext creates info level log with context. Appends dd.trace_id if context has a DD span.
 func (s *logger) InfoContext(ctx context.Context, msg string, keysAndValues ...interface{}) {
 	if span, hasSpan := tracer.SpanFromContext(ctx); hasSpan {
 		keysAndValues = prependKeyAndValue(keysAndValues, ddTraceIDKey, span.Context().TraceID())
@@ -57,6 +60,7 @@ func (s *logger) InfoContext(ctx context.Context, msg string, keysAndValues ...i
 	s.Infow(msg, keysAndValues...)
 }
 
+// WarnContext creates warn level log with context. Appends dd.trace_id if context has a DD span.
 func (s *logger) WarnContext(ctx context.Context, msg string, keysAndValues ...interface{}) {
 	if span, hasSpan := tracer.SpanFromContext(ctx); hasSpan {
 		keysAndValues = prependKeyAndValue(keysAndValues, ddTraceIDKey, span.Context().TraceID())
@@ -64,6 +68,7 @@ func (s *logger) WarnContext(ctx context.Context, msg string, keysAndValues ...i
 	s.Warnw(msg, keysAndValues...)
 }
 
+// ErrorContext creates an error log with context.
 func (s *logger) ErrorContext(ctx context.Context, msg string, keysAndValues ...interface{}) {
 	if span, hasSpan := tracer.SpanFromContext(ctx); hasSpan {
 		keysAndValues = prependKeyAndValue(keysAndValues, ddTraceIDKey, span.Context().TraceID())
@@ -71,25 +76,25 @@ func (s *logger) ErrorContext(ctx context.Context, msg string, keysAndValues ...
 	s.Errorw(msg, keysAndValues...)
 }
 
-// InfoSpan ...
+// InfoSpan creates an info level log with DataDog span.
 func (s *logger) InfoSpan(msg string, span tracer.Span, keysAndValues ...interface{}) {
 	k := prependKeyAndValue(keysAndValues, ddTraceIDKey, span.Context().TraceID())
 	s.Infow(msg, k...)
 }
 
-// WarnSpan ...
+// WarnSpan creates a warn level log with DataDog span.
 func (s *logger) WarnSpan(msg string, err error, span tracer.Span, keysAndValues ...interface{}) {
 	k := prependKeyAndValue(keysAndValues, ddTraceIDKey, span.Context().TraceID())
 	s.Warnf(fmt.Sprintf("%s : %s", msg, err), k...)
 }
 
-// ErrorSpan ...
+// ErrorSpan creates an error log with DataDog span.
 func (s *logger) ErrorSpan(msg string, err error, span tracer.Span, keysAndValues ...interface{}) {
 	k := prependKeyAndValue(keysAndValues, ddTraceIDKey, span.Context().TraceID())
 	s.Errorw(fmt.Sprintf("%s : %s", msg, err), k...)
 }
 
-// FinishSpanWithError ...
+// FinishSpanWithError creates error span and calls finish.
 func (s *logger) FinishSpanWithError(op string, sp tracer.Span, err error, keysAndValues ...interface{}) {
 	s.ErrorSpan("Error "+op, err, sp, keysAndValues...)
 	sp.Finish(tracer.WithError(err))
@@ -115,14 +120,14 @@ func prependKeyAndValue(x []interface{}, k interface{}, v interface{}) []interfa
 	return x
 }
 
-// NewLogger ...
+// NewLogger instantiates new logger instance.
 func NewLogger(output string) Logger {
 	return &logger{
 		SugaredLogger: NewLoggerWithLevel(output, "info"),
 	}
 }
 
-// NewLoggerWithStatsd ...
+// NewLoggerWithStatsd instantiates new logger instance with DataDog client interface support.
 func NewLoggerWithStatsd(output string, clientInterface statsd.ClientInterface) Logger {
 	return &logger{
 		SugaredLogger: NewLoggerWithLevel(output, "info"),
@@ -130,7 +135,7 @@ func NewLoggerWithStatsd(output string, clientInterface statsd.ClientInterface) 
 	}
 }
 
-// NewLoggerWithLevel ...
+// NewLoggerWithLevel instantiates new logger instance with log level support.
 func NewLoggerWithLevel(output string, level string) *zap.SugaredLogger {
 	lvl := zap.AtomicLevel{}
 	err := lvl.UnmarshalText([]byte((level)))

@@ -4,7 +4,9 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/DataDog/datadog-go/statsd"
 	"github.com/deliveryhero/sc-honeylogger/logging"
+	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
@@ -43,4 +45,24 @@ func TestNewLoggerWithLevel(t *testing.T) {
 			}
 		})
 	}
+}
+
+func ExampleNewLogger() {
+	logger := logging.NewLogger("stderr")
+	logger.Info("hello")
+
+	err := errors.New("demo error")
+	logger.Fatal(errors.Wrap(err, "invalid server port"))
+}
+
+func ExampleNewLoggerWithLevel() {
+	logger := logging.NewLoggerWithLevel("stderr", "info")
+	logger.Info("hello")
+}
+
+func ExampleNewLoggerWithStatsd() {
+	var DataDogClient statsd.ClientInterface
+
+	logger := logging.NewLoggerWithStatsd("stderr", DataDogClient)
+	logger.Info("hello")
 }
