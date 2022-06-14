@@ -21,7 +21,7 @@ func TestNewLogger(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := logging.NewLogger(tt.args.output); !reflect.DeepEqual(got, tt.want) {
+			if got := logging.NewInfoLogger(tt.args.output); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewLogger() = %v, want  %v", got, tt.want)
 			}
 		})
@@ -47,8 +47,8 @@ func TestNewLoggerWithLevel(t *testing.T) {
 	}
 }
 
-func ExampleNewLogger() {
-	logger := logging.NewLogger("stderr")
+func ExampleNewInfoLogger() {
+	logger := logging.NewInfoLogger("stderr")
 	logger.Info("hello")
 
 	err := errors.New("demo error")
@@ -60,9 +60,9 @@ func ExampleNewLoggerWithLevel() {
 	logger.Info("hello")
 }
 
-func ExampleNewLoggerWithStatsd() {
+func ExampleNewLoggerWithInfoStatsd() {
 	var DataDogClient statsd.ClientInterface
 
-	logger := logging.NewLoggerWithStatsd("stderr", DataDogClient)
+	logger := logging.NewLoggerWithInfoStatsd("stderr", DataDogClient)
 	logger.Info("hello")
 }
