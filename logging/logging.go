@@ -10,6 +10,8 @@ import (
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 )
 
+var _ Logger = (*logger)(nil) // compile time proof
+
 // Logger is interface for looger that DataDog trace supported.
 type Logger interface {
 	Sync() error
@@ -27,7 +29,7 @@ type Logger interface {
 	ErrorSpan(msg string, err error, span tracer.Span, keysAndValues ...interface{})
 	FinishSpanWithError(op string, sp tracer.Span, err error, keysAndValues ...interface{})
 	FinishSpan(op string, sp tracer.Span, keysAndValues ...interface{})
-	WrapError(sname string, fname string, detail string, err error) error // Wrap error with additional info
+	WrapError(sname string, fname string, detail string, err error) error
 }
 
 var ddTraceIDKey = "dd.trace_id"
@@ -40,6 +42,9 @@ type logger struct {
 
 // Wrap error with additional info and return error.
 func (s *logger) WrapError(sname string, fname string, detail string, err error) error {
+	if err == nil {
+		return nil
+	}
 	return fmt.Errorf("[%s.%s] %s %w", sname, fname, detail, err)
 }
 
