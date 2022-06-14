@@ -33,7 +33,7 @@ type Logger interface {
 	ErrorSpan(msg string, err error, span tracer.Span, keysAndValues ...interface{})
 	FinishSpanWithError(op string, sp tracer.Span, err error, keysAndValues ...interface{})
 	FinishSpan(op string, sp tracer.Span, keysAndValues ...interface{})
-	DataDogLogPrintf(sname string, fname string, detail string, params ...interface{}) string
+	FinishSpanWithIncrement(op string, sp tracer.Span, keysAndValues ...interface{})
 }
 
 var ddTraceIDKey = "dd.trace_id"
@@ -41,15 +41,6 @@ var ddTraceIDKey = "dd.trace_id"
 type logger struct {
 	*zap.SugaredLogger
 	stats statsd.ClientInterface
-}
-
-// DataDogLogPrintf with additional info and return trace.
-// sname is the name of the struct.
-// fname is the name of the function name.
-// detail is the detail of the error.
-// params is the parameters of detail the function.
-func (s *logger) DataDogLogPrintf(sname string, fname string, detail string, params ...interface{}) string {
-	return fmt.Sprintf("[%s.%s] %s", sname, fname, fmt.Sprintf(detail, params...))
 }
 
 // InfoContext creates info level log with context. Appends dd.trace_id if context has a DD span.
@@ -103,6 +94,12 @@ func (s *logger) FinishSpanWithError(op string, sp tracer.Span, err error, keysA
 // FinishSpan ...
 func (s *logger) FinishSpan(op string, sp tracer.Span, keysAndValues ...interface{}) {
 	s.InfoSpan(op+" completed successfully.", sp, keysAndValues...)
+	sp.Finish()
+}
+
+// FinishSpanWithIncrement creates increment span and calls finish.
+func (s *logger) FinishSpanWithIncrement(op string, sp tracer.Span, keysAndValues ...interface{}) {
+	s.InfoSpan(op+" completed successfully.", sp, keysAndValues...)
 	if s.stats != nil {
 		if err := s.stats.Incr(op+"_count", []string{}, 1); err != nil {
 			s.WarnSpan("failed to increment on datadog when "+op, err, sp, keysAndValues...)
@@ -120,23 +117,37 @@ func prependKeyAndValue(x []interface{}, k interface{}, v interface{}) []interfa
 	return x
 }
 
-// NewLogger instantiates new logger instance.
-func NewLogger(output string) Logger {
+// NewInfoLogger instantiates new logger instance.
+func NewInfoLogger(output string) Logger {
 	return &logger{
-		SugaredLogger: NewLoggerWithLevel(output, "info"),
-	}
-}
-
-// NewLoggerWithStatsd instantiates new logger instance with DataDog client interface support.
-func NewLoggerWithStatsd(output string, clientInterface statsd.ClientInterface) Logger {
-	return &logger{
-		SugaredLogger: NewLoggerWithLevel(output, "info"),
-		stats:         clientInterface,
+		SugaredLogger: newLoggerWithLevel(output, "info"),
 	}
 }
 
 // NewLoggerWithLevel instantiates new logger instance with log level support.
-func NewLoggerWithLevel(output string, level string) *zap.SugaredLogger {
+func NewLoggerWithLevel(output string, level string) Logger {
+	return &logger{
+		SugaredLogger: newLoggerWithLevel(output, level),
+	}
+}
+
+// NewLoggerWithInfoStatsd instantiates new logger instance with DataDog client interface support.
+func NewLoggerWithInfoStatsd(output string, clientInterface statsd.ClientInterface) Logger {
+	return &logger{
+		SugaredLogger: newLoggerWithLevel(output, "info"),
+		stats:         clientInterface,
+	}
+}
+
+// NewLoggerWithStatLevelsd instantiates new logger instance with DataDog client interface support.
+func NewLoggerWithStatLevelsd(output string, level string, clientInterface statsd.ClientInterface) Logger {
+	return &logger{
+		SugaredLogger: newLoggerWithLevel(output, level),
+		stats:         clientInterface,
+	}
+}
+
+func newLoggerWithLevel(output string, level string) *zap.SugaredLogger {
 	lvl := zap.AtomicLevel{}
 	err := lvl.UnmarshalText([]byte((level)))
 	if err != nil {
