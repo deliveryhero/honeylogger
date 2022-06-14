@@ -47,7 +47,8 @@ end
 
 desc "run mockery"
 task :mockery do
-  system "mockery --dir ./logging --all --keeptree"
+  rm_rf %w(mocks)
+  system "mockery --recursive --inpackage --keeptree --all --output ./mocks --case=underscore --log-level=error"
 end
 
 DOCS = [
