@@ -18,6 +18,10 @@ task :has_godoc do
     Rake::Task['command_exists'].invoke('godoc')
 end
 
+task :golangcilint do
+  Rake::Task['command_exists'].invoke('golangci-lint')
+end
+
 def current_version(lookup_file=".bumpversion.cfg")
   file = File.open(lookup_file, "r")
   data = file.read
@@ -89,4 +93,9 @@ task :publish, [:revision] => [:is_repo_clean] do |t, args|
     git push origin #{current_branch} &&
     echo "[->] code pushed to: [#{current_branch}] branch (updated)"
   }
+end
+
+desc "run golangci-lint"
+task :lint => [:golangcilint] do
+  system "golangci-lint run"
 end
