@@ -34,6 +34,7 @@ type Logger interface {
 	FinishSpanWithError(op string, sp tracer.Span, err error, keysAndValues ...interface{})
 	FinishSpan(op string, sp tracer.Span, keysAndValues ...interface{})
 	FinishSpanWithIncrement(op string, sp tracer.Span, keysAndValues ...interface{})
+	Printf(format string, v ...interface{})
 }
 
 var ddTraceIDKey = "dd.trace_id"
@@ -41,6 +42,11 @@ var ddTraceIDKey = "dd.trace_id"
 type logger struct {
 	*zap.SugaredLogger
 	stats statsd.ClientInterface
+}
+
+// Printf is a wrapper for Infof that needed for mocking.
+func (s *logger) Printf(format string, v ...interface{}) {
+	s.Infof(format, v...)
 }
 
 // InfoContext creates info level log with context. Appends dd.trace_id if context has a DD span.

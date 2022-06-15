@@ -115,6 +115,14 @@ func (_m *Logger) Infof(format string, keysAndValues ...interface{}) {
 	_m.Called(_ca...)
 }
 
+// Printf provides a mock function with given fields: format, v
+func (_m *Logger) Printf(format string, v ...interface{}) {
+	var _ca []interface{}
+	_ca = append(_ca, format)
+	_ca = append(_ca, v...)
+	_m.Called(_ca...)
+}
+
 // Sync provides a mock function with given fields:
 func (_m *Logger) Sync() error {
 	ret := _m.Called()
