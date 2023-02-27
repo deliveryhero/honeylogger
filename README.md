@@ -11,32 +11,6 @@ Simple logger with DataDog’s **span** support. Uses
 
 ## Installation
 
-This is a private repo, you need to fix your git/ssh or token operations before
-injecting to you go app.
-
-If you are using `git+ssh`, I’m assuming that you have already authorized your
-ssh-key key on [GitHub](https://github.com/settings/tokens) side under
-**Personal access tokens** page via **Configure SSO** combo-box.
-
-Fix your git configuration, run this:
-
-```bash
-git config --global --add url."git@github.com:".insteadOf "https://github.com/"
-```
-
-command above adds few lines to your `~/.gitconfig`:
-
-```ini
-[url "git@github.com:"]
-	insteadOf = https://github.com/
-```
-
-Now, add `GOPRIVATE` environment value to your shell environment.
-
-```bash
-export GOPRIVATE="github.com/deliveryhero"
-```
-
 Now you can add this package via;
 
 ```bash
