@@ -1,4 +1,4 @@
-![Version](https://img.shields.io/badge/version-1.3.2-orange.svg)
+![Version](https://img.shields.io/badge/version-1.3.3-orange.svg)
 [![GolangCI Lint](https://github.com/deliveryhero/honeylogger/actions/workflows/go-lint.yml/badge.svg)](https://github.com/deliveryhero/honeylogger/actions/workflows/go-lint.yml)
 [![Golang Tests](https://github.com/deliveryhero/honeylogger/actions/workflows/go-test.yml/badge.svg)](https://github.com/deliveryhero/honeylogger/actions/workflows/go-test.yml)
 
