@@ -2,7 +2,7 @@
 [![GolangCI Lint](https://github.com/deliveryhero/sc-honeylogger/actions/workflows/go-lint.yml/badge.svg)](https://github.com/deliveryhero/sc-honeylogger/actions/workflows/go-lint.yml)
 [![Golang Tests](https://github.com/deliveryhero/sc-honeylogger/actions/workflows/go-test.yml/badge.svg)](https://github.com/deliveryhero/sc-honeylogger/actions/workflows/go-test.yml)
 
-# Social Commerce Honeylogger
+# Honeylogger
 
 Simple logger with DataDog’s **span** support. Uses
 [Zap](https://github.com/uber-go/zap) under the hood.
