@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/DataDog/datadog-go/statsd"
-	"github.com/deliveryhero/sc-honeylogger/logging"
+	"github.com/deliveryhero/honeylogger/logging"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
 )

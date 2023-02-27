@@ -1,6 +1,6 @@
 ![Version](https://img.shields.io/badge/version-1.3.1-orange.svg)
-[![GolangCI Lint](https://github.com/deliveryhero/sc-honeylogger/actions/workflows/go-lint.yml/badge.svg)](https://github.com/deliveryhero/sc-honeylogger/actions/workflows/go-lint.yml)
-[![Golang Tests](https://github.com/deliveryhero/sc-honeylogger/actions/workflows/go-test.yml/badge.svg)](https://github.com/deliveryhero/sc-honeylogger/actions/workflows/go-test.yml)
+[![GolangCI Lint](https://github.com/deliveryhero/honeylogger/actions/workflows/go-lint.yml/badge.svg)](https://github.com/deliveryhero/honeylogger/actions/workflows/go-lint.yml)
+[![Golang Tests](https://github.com/deliveryhero/honeylogger/actions/workflows/go-test.yml/badge.svg)](https://github.com/deliveryhero/honeylogger/actions/workflows/go-test.yml)
 
 # Honeylogger
 
@@ -14,7 +14,7 @@ Simple logger with DataDog’s **span** support. Uses
 Now you can add this package via;
 
 ```bash
-go get github.com/deliveryhero/sc-honeylogger
+go get github.com/deliveryhero/honeylogger
 ```
 
 ---
@@ -128,7 +128,7 @@ then;
 
 ```bash
 # for default port
-open http://localhost:9009/pkg/github.com/deliveryhero/sc-honeylogger/logging/
+open http://localhost:9009/pkg/github.com/deliveryhero/honeylogger/logging/
 ```
 
 ---
@@ -162,7 +162,7 @@ tag and updated code to remote and verify go package. (all in one!)
 
 All PR’s are welcome!
 
-1. `fork` (https://github.com/deliveryhero/sc-honeylogger/fork)
+1. `fork` (https://github.com/deliveryhero/honeylogger/fork)
 1. Create your `branch` (`git checkout -b my-feature`)
 1. `commit` yours (`git commit -am 'add some functionality'`)
 1. `push` your `branch` (`git push origin my-feature`)
@@ -172,4 +172,4 @@ This project is intended to be a safe, welcoming space for collaboration, and
 contributors are expected to adhere to the [code of conduct][coc].
 
 
-[coc]: https://github.com/deliveryhero/sc-honeylogger/blob/main/CODE_OF_CONDUCT.md
+[coc]: https://github.com/deliveryhero/honeylogger/blob/main/CODE_OF_CONDUCT.md

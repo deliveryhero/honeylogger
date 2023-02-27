@@ -1,4 +1,4 @@
-module github.com/deliveryhero/sc-honeylogger
+module github.com/deliveryhero/honeylogger
 
 go 1.18
 
